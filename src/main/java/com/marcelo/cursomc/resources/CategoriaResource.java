@@ -2,6 +2,7 @@ package com.marcelo.cursomc.resources;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import com.marcelo.cursomc.domain.Categoria;
@@ -18,8 +19,8 @@ public class CategoriaResource {
 	private CategoriaService service;
 	
 	@RequestMapping(value= "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) {
-		Categoria cat1 = service.buscar(id);
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
+		Categoria cat1 = service.find(id);
 		return ResponseEntity.ok(cat1);
 	}
 
@@ -32,6 +33,14 @@ public class CategoriaResource {
 				.buildAndExpand(obj.getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
+	}
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id){
+		obj.setId(id);
+		obj = service.update(obj);
+
+		return ResponseEntity.noContent().build();
 	}
 	
 }
