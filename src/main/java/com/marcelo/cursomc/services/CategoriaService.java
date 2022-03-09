@@ -3,6 +3,7 @@ package com.marcelo.cursomc.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.marcelo.cursomc.dto.CategoriaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -56,6 +57,10 @@ public class CategoriaService {
 
 		return repo.findAll(pageRequest);
 		
+	}
+
+	public Categoria fromDTO(CategoriaDTO objDTO){
+		return new Categoria(objDTO.getId(), objDTO.getNome());
 	}
 
 }

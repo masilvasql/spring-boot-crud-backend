@@ -19,13 +19,15 @@ import com.marcelo.cursomc.domain.Categoria;
 import com.marcelo.cursomc.dto.CategoriaDTO;
 import com.marcelo.cursomc.services.CategoriaService;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value="/categorias")
 public class CategoriaResource {
-	
+
 	@Autowired
 	private CategoriaService service;
-	
+
 	@RequestMapping(value= "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 		Categoria cat1 = service.find(id);
@@ -33,18 +35,20 @@ public class CategoriaResource {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody Categoria obj){
-		obj = service.insert(obj);
+	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto){
+		Categoria categoriaObj = service.fromDTO(objDto);
+		categoriaObj = service.insert(categoriaObj);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")
-				.buildAndExpand(obj.getId())
+				.buildAndExpand(categoriaObj.getId())
 				.toUri();
 		return ResponseEntity.created(uri).build();
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id){
+	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id){
+		Categoria obj = service.fromDTO(objDto);
 		obj.setId(id);
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
@@ -62,16 +66,19 @@ public class CategoriaResource {
 		List<CategoriaDTO> listDto = list.stream().map(CategoriaDTO::new).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDto);
 	}
-	
+
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
-	public ResponseEntity<Page<CategoriaDTO>> findPage(
-			@RequestParam(value="page", defaultValue = "0") Integer page, 
-			@RequestParam(value="linesPerPage", defaultValue = "24")Integer linesPerPage, 
-			@RequestParam(value="orderBy", defaultValue = "nome")String orderBy, 
-			@RequestParam(value="direction", defaultValue = "ASC") String direction){
+	public ResponseEntity<Page<CategoriaDTO>> findPage
+			(
+					@RequestParam(value="page", defaultValue = "0") Integer page,
+					@RequestParam(value="linesPerPage", defaultValue = "24")Integer linesPerPage,
+					@RequestParam(value="orderBy", defaultValue = "nome")String orderBy,
+					@RequestParam(value="direction", defaultValue = "ASC") String direction
+			)
+	{
 		Page<Categoria> paginacao = service.findPage(page, linesPerPage, orderBy, direction);
-		Page<CategoriaDTO> listDto = paginacao.map(obj -> new CategoriaDTO(obj));
+		Page<CategoriaDTO> listDto = paginacao.map(CategoriaDTO::new);
 		return ResponseEntity.ok().body(listDto);
 	}
-	
+
 }
