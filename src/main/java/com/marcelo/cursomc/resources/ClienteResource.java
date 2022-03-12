@@ -1,6 +1,8 @@
 package com.marcelo.cursomc.resources;
 
+import com.marcelo.cursomc.domain.Categoria;
 import com.marcelo.cursomc.domain.Cliente;
+import com.marcelo.cursomc.dto.ClienteNewDTO;
 import com.marcelo.cursomc.dto.ClienteDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -9,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import com.marcelo.cursomc.domain.Cliente;
 import com.marcelo.cursomc.services.ClienteService;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +64,18 @@ public class ClienteResource {
 		Page<Cliente> paginacao = service.findPage(page, linesPerPage, orderBy, direction);
 		Page<ClienteDTO> listDto = paginacao.map(ClienteDTO::new);
 		return ResponseEntity.ok().body(listDto);
+	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteNewDTO objDto){
+		Cliente clienteObj = service.fromDTO(objDto);
+		clienteObj = service.insert(clienteObj);
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(clienteObj.getId())
+				.toUri();
+		return ResponseEntity.created(uri).build();
 	}
 	
 	
