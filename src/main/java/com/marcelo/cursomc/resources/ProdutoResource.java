@@ -47,7 +47,7 @@ public class ProdutoResource {
     {
         List<Integer> categoriasInteger = URL.decodeIntList(categorias);
         String nomeDecoded = URL.decodeParam(nome);
-            Page<Produto> paginacao = produtoService.search(nomeDecoded, categoriasInteger, page, linesPerPage, orderBy, direction);
+        Page<Produto> paginacao = produtoService.search(nomeDecoded, categoriasInteger, page, linesPerPage, orderBy, direction);
         Page<ProdutoDTO> listDto = paginacao.map(ProdutoDTO::new);
         return ResponseEntity.ok().body(listDto);
     }
