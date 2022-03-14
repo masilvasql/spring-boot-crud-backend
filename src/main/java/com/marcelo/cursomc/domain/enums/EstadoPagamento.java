@@ -13,6 +13,10 @@ public enum EstadoPagamento {
 		this.descricao = descricao;
 	}
 
+	public String getDescricao() {
+		return descricao;
+	}
+
 	public int getCodigo() {
 		return codigo;
 	}
@@ -20,6 +24,7 @@ public enum EstadoPagamento {
 	public void setCodigo(int codigo) {
 		this.codigo = codigo;
 	}
+
 
 
 	public static EstadoPagamento tipoEstadoPagamento(Integer cod) {
