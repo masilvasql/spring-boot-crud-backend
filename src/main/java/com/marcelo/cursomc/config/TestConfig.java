@@ -5,6 +5,8 @@ import com.marcelo.cursomc.domain.enums.EstadoPagamento;
 import com.marcelo.cursomc.domain.enums.TipoCliente;
 import com.marcelo.cursomc.repositories.*;
 import com.marcelo.cursomc.services.DBService;
+import com.marcelo.cursomc.services.EmailService;
+import com.marcelo.cursomc.services.MockMailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,5 +56,10 @@ public class TestConfig {
         dbService.instantiateTestDatabase();
 
         return true;
+    }
+
+    @Bean
+    public EmailService emailService(){
+        return new MockMailService();
     }
 }
