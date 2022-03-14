@@ -1,6 +1,9 @@
 package com.marcelo.cursomc.config;
 
 import com.marcelo.cursomc.services.DBService;
+import com.marcelo.cursomc.services.EmailService;
+import com.marcelo.cursomc.services.SmtpEmailService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,5 +32,10 @@ public class DevConfig {
         dbService.instantiateTestDatabase();
 
         return true;
+    }
+    
+    @Bean 
+    public EmailService emailService() {
+    	return new SmtpEmailService();
     }
 }
